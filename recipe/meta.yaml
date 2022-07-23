@@ -15,8 +15,8 @@ source:
     - use-gn-from-conda.patch
     # use cc, cxx set by the environment
     - inherit-cc-cxx-from-environment.patch
-    # Fix for arm build on linux
-    - add-correct-target-cpu-aarch64.patch
+    # Fix for arm build on linux and max
+    - add-correct-target-cpu.patch
 
 build:
   skip: true  # [py<37]
