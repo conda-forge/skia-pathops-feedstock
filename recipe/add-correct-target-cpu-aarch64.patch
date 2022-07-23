@@ -1,0 +1,13 @@
+diff --git a/setup.py b/setup.py
+index 90c0179..35fb093 100644
+--- a/setup.py
++++ b/setup.py
+@@ -272,6 +272,8 @@ def build_skia(build_base):
+         # if Python was built as a 'universal2' binary, we also try to build
+         # a single library combining both x86_64 and arm64 architectures
+         target_cpu = "universal2"
++    elif 'aarch64' in get_platform():
++        target_cpu = 'arm64'
+ 
+     if target_cpu:
+         build_cmd.extend(["--target-cpu", target_cpu])
