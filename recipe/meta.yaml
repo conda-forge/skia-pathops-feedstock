@@ -15,16 +15,21 @@ source:
     - use-gn-from-conda.patch
     # use cc, cxx set by the environment
     - inherit-cc-cxx-from-environment.patch
+    # fix for arm build on linux and mac
+    - add-correct-target-cpu.patch  # [build_platform != target_platform]
 
 build:
   skip: true  # [py<37]
   # FIXME: Unskip Windows when gn becomes available for Windows
   skip: true  # [win]
   script: {{ PYTHON }} -m pip install . -vv
-  number: 2
+  number: 3
 
 requirements:
   build:
+    - python                                 # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - cython                                 # [build_platform != target_platform]
     - {{ compiler('cxx') }}
     - ninja
     - gn
