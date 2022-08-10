@@ -303,4 +303,5 @@ Feedstock Maintainers
 =====================
 
 * [@naveen521kk](https://github.com/naveen521kk/)
+* [@pavelzw](https://github.com/pavelzw/)
 
