@@ -22,8 +22,7 @@ build:
   skip: true  # [py<37]
   # the build takes around 10 min without output, the Travis CI kills the machine when there is no output for 10 min
   # -> increase the time with travis_wait
-  script: travis_wait 30 {{ PYTHON }} -m pip install . -vv  # [ppc64le or aarch64]
-  script: {{ PYTHON }} -m pip install . -vv  # [not (ppc64le or aarch64)]
+  script: {{ PYTHON }} -m pip install . -vv
   number: 0
 
 requirements:
