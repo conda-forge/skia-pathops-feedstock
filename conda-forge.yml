@@ -9,3 +9,5 @@ provider:
   linux_ppc64le: default
 test: native_and_emulated
 idle_timeout_minutes: 30
+conda_build:
+  pkg_format: '2'
