@@ -1,11 +1,11 @@
-About skia-pathops
-==================
+About skia-pathops-feedstock
+============================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/skia-pathops-feedstock/blob/main/LICENSE.txt)
 
 Home: https://github.com/fonttools/skia-pathops
 
 Package license: BSD-3-Clause
-
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/skia-pathops-feedstock/blob/main/LICENSE.txt)
 
 Summary: Python access to operations on paths using the Skia library
 
