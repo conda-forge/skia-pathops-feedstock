@@ -1,5 +1,5 @@
 {% set name = "skia-pathops" %}
-{% set version = "0.7.4" %}
+{% set version = "0.8.0.post1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/skia-pathops-{{ version }}.zip
-  sha256: 0a2fdee87b7adb018cbfa6e95ef9e4299ed63b0080be27677a30ffefbca91350
+  sha256: a056249de2f61fa55116b9ee55513c6a36b878aee00c91450e404d1606485cbb
   patches:
     # use ninja from conda instead
     - disable-virtualenv-creation.patch
