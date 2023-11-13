@@ -1,0 +1,13 @@
+diff --git a/src/cpp/skia-builder/skia/include/private/base/SkTArray.h b/src/cpp/skia-builder/skia/include/private/base/SkTArray.h
+index c09aa0145d..859f90641e 100644
+--- a/src/cpp/skia-builder/skia/include/private/base/SkTArray.h
++++ b/src/cpp/skia-builder/skia/include/private/base/SkTArray.h
+@@ -489,7 +489,7 @@ private:
+
+     // Note for 32-bit machines kMaxCapacity will be <= SIZE_MAX. For 64-bit machines it will
+     // just be INT_MAX if the sizeof(T) < 2^32.
+-    static constexpr int kMaxCapacity = SkToInt(std::min(SIZE_MAX / sizeof(T), (size_t)INT_MAX));
++    static constexpr int kMaxCapacity = SkToInt(std::min<int>(SIZE_MAX / sizeof(T), (size_t)INT_MAX));
+
+     void setDataFromBytes(SkSpan<std::byte> allocation) {
+         T* data = TCast(allocation.data());

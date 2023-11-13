@@ -18,6 +18,7 @@ source:
     # fix for arm build on linux and mac
     - add-correct-target-cpu.patch  # [build_platform != target_platform]
     - use-python-executable.patch  # [win]
+    - fix-min-expression.patch  # [osx]
 
 build:
   skip: true  # [py<37]
