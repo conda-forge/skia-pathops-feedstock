@@ -1,0 +1,11 @@
+diff --git a/src/cpp/skia-builder/skia/.gn b/src/cpp/skia-builder/skia/.gn
+index 1d734b302b..1f963eea78 100644
+--- a/src/cpp/skia-builder/skia/.gn
++++ b/src/cpp/skia-builder/skia/.gn
+@@ -1,5 +1,5 @@
+ buildconfig = "//gn/BUILDCONFIG.gn"
+-script_executable = "python3"
++script_executable = "python"
+ 
+ default_args = {
+   angle_standalone = false

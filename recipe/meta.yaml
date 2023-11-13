@@ -17,6 +17,7 @@ source:
     - inherit-cc-cxx-from-environment.patch
     # fix for arm build on linux and mac
     - add-correct-target-cpu.patch  # [build_platform != target_platform]
+    - use-python-executable.patch  # [win]
 
 build:
   skip: true  # [py<37]
