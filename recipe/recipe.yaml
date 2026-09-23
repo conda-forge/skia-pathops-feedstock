@@ -11,23 +11,16 @@ source:
   url: https://files.pythonhosted.org/packages/source/s/skia-pathops/skia_pathops-${{ version }}.tar.gz
   sha256: 4b6d8459f6f4a69282cb26fca0c2bb0b321cc58a9bf9cc6579a52a391edc0319
   patches:
-    # use ninja from conda instead
-    - disable-virtualenv-creation.patch
-    # use gn from conda
-    - use-gn-from-conda.patch
-    # use cc, cxx set by the environment
-    - inherit-cc-cxx-from-environment.patch
-    # fix for arm build on linux and mac
-    - if: build_platform != target_platform
-      then: add-correct-target-cpu.patch
-    - if: win
-      then: use-python-executable.patch
-    - if: osx
-      then: fix-min-expression.patch
+    # the sdist's vendored skia must not shadow the headers of the skia we link against
+    - dont-use-vendored-skia-headers.patch
 
 build:
-  number: 2
-  script: ${{ PYTHON }} -m pip install . -vv
+  number: 3
+  script:
+    # link against the libskia package instead of building the vendored skia;
+    # setup.py then locates it with pkg-config
+    - export BUILD_SKIA_FROM_SOURCE=0
+    - ${{ PYTHON }} -m pip install . -vv
 
 requirements:
   build:
@@ -38,13 +31,13 @@ requirements:
         - cython
     - ${{ compiler('cxx') }}
     - ${{ stdlib("c") }}
-    - ninja
-    - gn
+    - pkg-config
   host:
     - pip
     - python
     - setuptools-scm
     - cython >=0.27
+    - libskia
   run:
     - python
 
@@ -53,13 +46,20 @@ tests:
       imports:
         - pathops
       pip_check: true
+  - script:
+      - python test_pathops.py
+    files:
+      recipe:
+        - test_pathops.py
+    requirements:
+      run:
+        - python
 
 about:
   summary: Python access to operations on paths using the Skia library
   license: BSD-3-Clause
   license_file:
     - LICENSE
-    - src/cpp/skia-builder/skia/LICENSE
   homepage: https://github.com/fonttools/skia-pathops
 
 extra:

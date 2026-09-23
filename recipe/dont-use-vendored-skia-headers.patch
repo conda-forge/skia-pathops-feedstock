@@ -1,0 +1,23 @@
+Only add the vendored Skia to the include path when building it from source.
+
+The sdist vendors a full Skia checkout, so with BUILD_SKIA_FROM_SOURCE=0 the
+vendored headers still come first on the include path and shadow the ones
+belonging to the Skia we actually link against. That is silently wrong: the two
+trees can disagree about the defines in SkUserConfig.h and about which APIs are
+compiled into the library at all (e.g. SK_HIDE_PATH_EDIT_METHODS), which shows up
+as undefined symbols or, worse, as an ABI mismatch at runtime.
+
+--- a/setup.py
++++ b/setup.py
+@@ -340,7 +340,10 @@
+ skia_dir = os.path.join(skia_builder_dir, "skia")
+ skia_src_dir = os.path.join(skia_dir, "src")  # allow access to internals
+
+-include_dirs = [skia_dir, skia_src_dir, *pkg_config_op.include_dirs]
++if BUILD_SKIA_FROM_SOURCE:
++    include_dirs = [skia_dir, skia_src_dir, *pkg_config_op.include_dirs]
++else:
++    include_dirs = [*pkg_config_op.include_dirs]
+
+ extra_compile_args = {
+     "": [
