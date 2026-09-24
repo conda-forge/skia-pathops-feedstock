@@ -18,9 +18,12 @@ build:
   number: 3
   script:
     # link against the libskia package instead of building the vendored skia;
-    # setup.py then locates it with pkg-config
-    - export BUILD_SKIA_FROM_SOURCE=0
-    - ${{ PYTHON }} -m pip install . -vv
+    # setup.py then locates it with pkg-config. Set through env rather than a
+    # shell command because `export` is not valid on Windows.
+    env:
+      BUILD_SKIA_FROM_SOURCE: "0"
+    content:
+      - ${{ PYTHON }} -m pip install . -vv
 
 requirements:
   build:
