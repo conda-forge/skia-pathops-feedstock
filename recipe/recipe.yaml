@@ -22,7 +22,7 @@ build:
       BUILD_SKIA_FROM_SOURCE: "0"
       # already the upstream default, but stated so a change of that default
       # cannot silently turn this back into a per-Python build
-      USE_PY_LIMITED_API: ${{ is_abi3 and not is_python_min }}
+      USE_PY_LIMITED_API: ${{ is_abi3 }}
     content:
       - ${{ PYTHON }} -m pip install . -vv
   python:
