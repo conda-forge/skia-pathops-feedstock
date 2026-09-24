@@ -16,8 +16,10 @@ cxx_compiler_version:
 - '21'
 is_abi3:
 - true
+is_python_min:
+- true
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -27,7 +29,8 @@ python:
 python_min:
 - '3.11'
 target_platform:
-- osx-64
+- osx-arm64
 zip_keys:
 - - python
+  - is_python_min
   - channel_sources
