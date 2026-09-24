@@ -11,23 +11,22 @@ source:
   url: https://files.pythonhosted.org/packages/source/s/skia-pathops/skia_pathops-${{ version }}.tar.gz
   sha256: 4b6d8459f6f4a69282cb26fca0c2bb0b321cc58a9bf9cc6579a52a391edc0319
   patches:
-    # use ninja from conda instead
-    - disable-virtualenv-creation.patch
-    # use gn from conda
-    - use-gn-from-conda.patch
-    # use cc, cxx set by the environment
-    - inherit-cc-cxx-from-environment.patch
-    # fix for arm build on linux and mac
-    - if: build_platform != target_platform
-      then: add-correct-target-cpu.patch
-    - if: win
-      then: use-python-executable.patch
-    - if: osx
-      then: fix-min-expression.patch
+    # the sdist's vendored skia must not shadow the headers of the skia we link against
+    - dont-use-vendored-skia-headers.patch
 
 build:
-  number: 2
-  script: ${{ PYTHON }} -m pip install . -vv
+  number: 3
+  skip: is_abi3 and not is_python_min
+  script:
+    env:
+      BUILD_SKIA_FROM_SOURCE: "0"
+      # already the upstream default, but stated so a change of that default
+      # cannot silently turn this back into a per-Python build
+      USE_PY_LIMITED_API: ${{ is_abi3 }}
+    content:
+      - ${{ PYTHON }} -m pip install . -vv
+  python:
+    version_independent: ${{ is_abi3 }}
 
 requirements:
   build:
@@ -35,16 +34,18 @@ requirements:
       then:
         - python
         - cross-python_${{ target_platform }}
-        - cython
+        - cython >=3.2.0
     - ${{ compiler('cxx') }}
     - ${{ stdlib("c") }}
-    - ninja
-    - gn
+    - pkg-config
   host:
     - pip
     - python
+    - python-abi3
+    - setuptools
     - setuptools-scm
-    - cython >=0.27
+    - cython >=3.2.0
+    - libskia
   run:
     - python
 
@@ -53,13 +54,27 @@ tests:
       imports:
         - pathops
       pip_check: true
+      python_version:
+        - ${{ python_min }}.*
+        - "*"
+  - script:
+      - python test_pathops.py
+      - if: unix
+        then: abi3audit $SP_DIR/pathops/_pathops.abi3.so -s -v --assume-minimum-abi3 ${{ python_min }}
+        else: abi3audit %SP_DIR%/pathops/_pathops.pyd -s -v --assume-minimum-abi3 ${{ python_min }}
+    files:
+      recipe:
+        - test_pathops.py
+    requirements:
+      run:
+        - python
+        - abi3audit
 
 about:
   summary: Python access to operations on paths using the Skia library
   license: BSD-3-Clause
   license_file:
     - LICENSE
-    - src/cpp/skia-builder/skia/LICENSE
   homepage: https://github.com/fonttools/skia-pathops
 
 extra:

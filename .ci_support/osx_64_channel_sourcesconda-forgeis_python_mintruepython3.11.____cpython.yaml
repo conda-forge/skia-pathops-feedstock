@@ -7,23 +7,30 @@ c_stdlib:
 c_stdlib_version:
 - '11.0'
 channel_sources:
-- conda-forge,conda-forge/label/python_rc
+- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '21'
+is_abi3:
+- true
+is_python_min:
+- true
 macos_machine:
-- arm64-apple-darwin20.0.0
+- x86_64-apple-darwin13.4.0
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.15.* *_cp315
+- 3.11.* *_cpython
+python_min:
+- '3.11'
 target_platform:
-- osx-arm64
+- osx-64
 zip_keys:
 - - python
+  - is_python_min
   - channel_sources
