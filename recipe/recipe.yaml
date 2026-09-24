@@ -16,24 +16,17 @@ source:
 
 build:
   number: 3
-  # one build per platform instead of one per Python: every variant other than
-  # python_min would produce the same abi3 extension
-  skip: not (match(python, python_min ~ ".*") and is_abi3)
+  skip: is_abi3 and not is_python_min
   script:
-    # link against the libskia package instead of building the vendored skia;
-    # setup.py then locates it with pkg-config. Set through env rather than a
-    # shell command because `export` is not valid on Windows.
     env:
       BUILD_SKIA_FROM_SOURCE: "0"
       # already the upstream default, but stated so a change of that default
       # cannot silently turn this back into a per-Python build
-      USE_PY_LIMITED_API: "1"
+      USE_PY_LIMITED_API: ${{ is_abi3 and not is_python_min }}
     content:
       - ${{ PYTHON }} -m pip install . -vv
   python:
-    # setup.py compiles against the limited API (Py_LIMITED_API 0x030A0000) and
-    # emits _pathops.abi3.so, so one build serves every supported Python
-    version_independent: true
+    version_independent: ${{ is_abi3 }}
 
 requirements:
   build:
@@ -41,7 +34,7 @@ requirements:
       then:
         - python
         - cross-python_${{ target_platform }}
-        - cython
+        - cython >=3.2.0
     - ${{ compiler('cxx') }}
     - ${{ stdlib("c") }}
     - pkg-config
@@ -51,7 +44,7 @@ requirements:
     - python-abi3
     - setuptools
     - setuptools-scm
-    - cython >=0.27
+    - cython >=3.2.0
     - libskia
   run:
     - python
@@ -61,21 +54,14 @@ tests:
       imports:
         - pathops
       pip_check: true
-      # the point of the abi3 build is that one artifact works everywhere, so
-      # import it both on the version it was compiled against and on the newest
       python_version:
         - ${{ python_min }}.*
         - "*"
   - script:
-      # runs against the newest python, which is the interesting direction: the
-      # extension was compiled against ${{ python_min }}
       - python test_pathops.py
-      # check the extension really only uses the limited API. 3.10 rather than
-      # python_min because that is the floor setup.py compiles against, which
-      # makes this the stricter assertion of the two.
       - if: unix
-        then: abi3audit $SP_DIR/pathops/_pathops.abi3.so -s -v --assume-minimum-abi3 3.10
-        else: abi3audit %SP_DIR%/pathops/_pathops.pyd -s -v --assume-minimum-abi3 3.10
+        then: abi3audit $SP_DIR/pathops/_pathops.abi3.so -s -v --assume-minimum-abi3 ${{ python_min }}
+        else: abi3audit %SP_DIR%/pathops/_pathops.pyd -s -v --assume-minimum-abi3 ${{ python_min }}
     files:
       recipe:
         - test_pathops.py
