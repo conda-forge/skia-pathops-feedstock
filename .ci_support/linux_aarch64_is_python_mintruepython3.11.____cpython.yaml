@@ -1,3 +1,5 @@
+DOCKER_PLATFORM:
+- linux/aarch64
 c_stdlib:
 - sysroot
 c_stdlib_version:
@@ -29,4 +31,3 @@ target_platform:
 zip_keys:
 - - python
   - is_python_min
-  - channel_sources
