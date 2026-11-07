@@ -15,7 +15,7 @@ source:
     - dont-use-vendored-skia-headers.patch
 
 build:
-  number: 4
+  number: 5
   skip: is_abi3 and not is_python_min
   script:
     env:
@@ -37,7 +37,7 @@ requirements:
         - cython >=3.2.0
     - ${{ compiler('cxx') }}
     - ${{ stdlib("c") }}
-    - pkg-config
+    - pkgconf
   host:
     - pip
     - python
